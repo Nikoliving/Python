@@ -23,6 +23,7 @@ import intelhex
 # define BANK4_START_ADDRESS          0x00100000U
 # define BANK4_END_ADDRESS            0x00103000U
 
+#Pri
 crctab16=[
     0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
     0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
@@ -57,6 +58,42 @@ crctab16=[
     0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330,
     0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78]
 # print(crctab16)
+
+#Sec
+u16CRC16Table = [
+    0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
+    0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
+    0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
+    0x0A00, 0xCAC1, 0xCB81, 0x0B40, 0xC901, 0x09C0, 0x0880, 0xC841,
+    0xD801, 0x18C0, 0x1980, 0xD941, 0x1B00, 0xDBC1, 0xDA81, 0x1A40,
+    0x1E00, 0xDEC1, 0xDF81, 0x1F40, 0xDD01, 0x1DC0, 0x1C80, 0xDC41,
+    0x1400, 0xD4C1, 0xD581, 0x1540, 0xD701, 0x17C0, 0x1680, 0xD641,
+    0xD201, 0x12C0, 0x1380, 0xD341, 0x1100, 0xD1C1, 0xD081, 0x1040,
+    0xF001, 0x30C0, 0x3180, 0xF141, 0x3300, 0xF3C1, 0xF281, 0x3240,
+    0x3600, 0xF6C1, 0xF781, 0x3740, 0xF501, 0x35C0, 0x3480, 0xF441,
+    0x3C00, 0xFCC1, 0xFD81, 0x3D40, 0xFF01, 0x3FC0, 0x3E80, 0xFE41,
+    0xFA01, 0x3AC0, 0x3B80, 0xFB41, 0x3900, 0xF9C1, 0xF881, 0x3840,
+    0x2800, 0xE8C1, 0xE981, 0x2940, 0xEB01, 0x2BC0, 0x2A80, 0xEA41,
+    0xEE01, 0x2EC0, 0x2F80, 0xEF41, 0x2D00, 0xEDC1, 0xEC81, 0x2C40,
+    0xE401, 0x24C0, 0x2580, 0xE541, 0x2700, 0xE7C1, 0xE681, 0x2640,
+    0x2200, 0xE2C1, 0xE381, 0x2340, 0xE101, 0x21C0, 0x2080, 0xE041,
+    0xA001, 0x60C0, 0x6180, 0xA141, 0x6300, 0xA3C1, 0xA281, 0x6240,
+    0x6600, 0xA6C1, 0xA781, 0x6740, 0xA501, 0x65C0, 0x6480, 0xA441,
+    0x6C00, 0xACC1, 0xAD81, 0x6D40, 0xAF01, 0x6FC0, 0x6E80, 0xAE41,
+    0xAA01, 0x6AC0, 0x6B80, 0xAB41, 0x6900, 0xA9C1, 0xA881, 0x6840,
+    0x7800, 0xB8C1, 0xB981, 0x7940, 0xBB01, 0x7BC0, 0x7A80, 0xBA41,
+    0xBE01, 0x7EC0, 0x7F80, 0xBF41, 0x7D00, 0xBDC1, 0xBC81, 0x7C40,
+    0xB401, 0x74C0, 0x7580, 0xB541, 0x7700, 0xB7C1, 0xB681, 0x7640,
+    0x7200, 0xB2C1, 0xB381, 0x7340, 0xB101, 0x71C0, 0x7080, 0xB041,
+    0x5000, 0x90C1, 0x9181, 0x5140, 0x9301, 0x53C0, 0x5280, 0x9241,
+    0x9601, 0x56C0, 0x5780, 0x9741, 0x5500, 0x95C1, 0x9481, 0x5440,
+    0x9C01, 0x5CC0, 0x5D80, 0x9D41, 0x5F00, 0x9FC1, 0x9E81, 0x5E40,
+    0x5A00, 0x9AC1, 0x9B81, 0x5B40, 0x9901, 0x59C0, 0x5880, 0x9841,
+    0x8801, 0x48C0, 0x4980, 0x8941, 0x4B00, 0x8BC1, 0x8A81, 0x4A40,
+    0x4E00, 0x8EC1, 0x8F81, 0x4F40, 0x8D01, 0x4DC0, 0x4C80, 0x8C41,
+    0x4400, 0x84C1, 0x8581, 0x4540, 0x8701, 0x47C0, 0x4680, 0x8641,
+    0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040]
+# print(u16CRC16Table)
 
 def MC56F8_GetCheckCRC32(u16Data,u32CRC):
     u32Temp = ((u16Data) << 24) ^ u32CRC
@@ -240,7 +277,7 @@ def MC56F8_CreateBinFile(offset,output_bin_file,u8Image_ByteArray=[]):
 
 
 if __name__ == "__main__":
-
+## Pri Part
     boot_u32FlashSize = 64*1024 #64KB
     # boot area
     boot_InputFile = "./TMS320F28P650DH6_pfc_cpu1_boot.hex"
@@ -295,7 +332,7 @@ if __name__ == "__main__":
 
     u8App2ImageArrayWithoutCali = []
     CPU2_u16CRC = 0xFFFF
-    if(True == os.path.exists(app1_InputFile)): # True/False
+    if(True == os.path.exists(app2_InputFile)): # True/False
         u8App2ImageArray = MC56F8_GetBinList(app2_u32FlashSize,app2_StartAddress*2,app2_Sizes*2,app2_Page,app2_InputFile,app2_Records)
         
         # Checksum2
@@ -327,21 +364,6 @@ if __name__ == "__main__":
     # print("{:08X}".format(Origin_ZeroAddress))
     u8App1App2ToBootImageArray = u8App1ImageArrayWithoutCali + u8App2ImageArrayWithoutCali
 
-
-    # # combine area
-    # Combine_output_file = "./TMS320F28P650DH6_pfc_combine_B0boot_B0cpu1_B1cali_CS_" + "{:04X}".format(CPU1_u16CRC) + ".hex"
-    # # CPU1_u16CRC = ((CPU1_u16CRC & 0xFF000000) >> 24) + ((CPU1_u16CRC & 0xFF0000) >> 8) + ((CPU1_u16CRC & 0xFF00) << 8) +  ((CPU1_u16CRC & 0xFF) << 24)
-    # # CPU2_u16CRC = ((CPU2_u16CRC & 0xFF000000) >> 24) + ((CPU2_u16CRC & 0xFF0000) >> 8) + ((CPU2_u16CRC & 0xFF00) << 8) +  ((CPU2_u16CRC & 0xFF) << 24)
-    # #清除原输出文件
-    # Save_File = open(Combine_output_file, 'w')
-    # Save_File.close()
-    # MC56F8_CreateRecordsByBin(Combine_output_file,boot_StartAddress,boot_page,u8BootImageArray,boot_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app1_StartAddress,app1_Page,u8App1ImageArrayWithoutCali,app1_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app1_cal_StartAddress,app1_cal_Page,u8App1CalArray,app1_cal_Records)
-    # Save_File = open(Combine_output_file, 'a')
-    # Save_File.write(":00000001FF\n")
-    # Save_File.close()
-
     # Add Bak1 & Bak2
     Combine_output_file = "./TMS320F28P650DH6_pfc_combine_B0boot_B0cpu1_B1cpu1bak_B1cpu2bak_B1cali_CS_" + "{:04X}".format(CPU1_u16CRC) + ".hex"
     Save_File = open(Combine_output_file, 'w')
@@ -364,31 +386,7 @@ if __name__ == "__main__":
     Save_File.write(":00000001FF\n")
     Save_File.close()
     
-    # Combine_output_file = "./TMS320F28P650DH6_pfc_combine_B0cpu1_B4cpu2_CS_" + "{:04X}".format(CPU1_u16CRC) + "_" + "{:04X}".format(CPU2_u16CRC) +".hex"
-    # Save_File = open(Combine_output_file, 'w')
-    # Save_File.close()
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app1_StartAddress,app1_Page,u8App1ImageArrayWithoutCali,app1_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app2_StartAddress,app2_Page,u8App2ImageArrayWithoutCali,app2_Records)
-    # Save_File = open(Combine_output_file, 'a')
-    # Save_File.write(":00000001FF\n")
-    # Save_File.close()
-    
-    # ALL to Combine ->->-> Bank0 CPU1 + Bank1 CPU1bak + Bank1 CPU2bak + Bank1 Cali + Bank4 CPU2 
-    # Combine_output_file = "./TMS320F28P650DH6_pfc_ALLcombine_CS_" + "{:04X}".format(CPU1_u16CRC) + "_" + "{:04X}".format(CPU2_u16CRC) +".hex"
-    # Save_File = open(Combine_output_file, 'w')
-    # Save_File.close()
-    # MC56F8_CreateRecordsByBin(Combine_output_file,boot_StartAddress,boot_page,u8BootImageArray,boot_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app1_StartAddress,app1_Page,u8App1ImageArrayWithoutCali,app1_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,Combine_app1bak_StartAddress,Combine_app1bak_Page,u8App1ImageArrayWithoutCali,Combine_app1bak_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,Combine_app2bak_StartAddress,Combine_app2bak_Page,u8App2ImageArrayWithoutCali,Combine_app2bak_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app1_cal_StartAddress,app1_cal_Page,u8App1CalArray,app1_cal_Records)
-    # MC56F8_CreateRecordsByBin(Combine_output_file,app2_StartAddress,app2_Page,u8App2ImageArrayWithoutCali,app2_Records)
-    # Save_File = open(Combine_output_file, 'a')
-    # Save_File.write(":00000001FF\n")
-    # Save_File.close()
-    
     # App1 & App2 combine ->->-> UseToBoot
-    # Combine_output_file = "./Primary_TMS320F28P650DH6_pfc_combine_B0cpu1_B4cpu2_UseToBoot.bin"
     Combine_output_file = "./Primary_TMS320F28P650DH6_pfc_combine_B0cpu1_B4cpu2_UseToBoot.hex"
     Save_File = open(Combine_output_file, 'w')
     Save_File.close()
