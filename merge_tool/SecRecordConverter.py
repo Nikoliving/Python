@@ -120,7 +120,7 @@ def MC56F8_CreateRecordsByBin(output_file,u32OffsetAddress,u32Page,u8Image_ByteA
         Save_File.write(strRecordsList[i]+"\n")
     Save_File.close()
 
-def MC56F8_GetBinList(u32FlashSize,u32BinStartAddress,bin_Sizes,PageOffset,strFilePath='',Records = []):
+def Sec_MC56F8_GetBinList(u32FlashSize,u32BinStartAddress,bin_Sizes,PageOffset,strFilePath='',Records = []):
 
     AddrStart = u32BinStartAddress + PageOffset*0x10000*2
     AddrEnd = AddrStart + bin_Sizes
@@ -131,8 +131,15 @@ def MC56F8_GetBinList(u32FlashSize,u32BinStartAddress,bin_Sizes,PageOffset,strFi
     u8Image_ByteArray.clear()
 
     u32FlashBinArrayAddr = 0
+    u8FillIncnt = 1
     for i in range(0, u32FlashSize, 1):
-        u8FlashBinArray.append(0xFF)
+        if(u8FillIncnt <= 3):
+            u8FlashBinArray.append(0xFF)
+        else:
+            u8FlashBinArray.append(0x00)   # CH512MP508 24-bit addressing
+        u8FillIncnt +=1
+        if(u8FillIncnt > 4):
+            u8FillIncnt = 1
 
     #Hex or S-record File
     file_ReadHex = open(strFilePath, 'r')
@@ -167,7 +174,7 @@ def MC56F8_GetBinList(u32FlashSize,u32BinStartAddress,bin_Sizes,PageOffset,strFi
             for indexFlash in range(0, len(strHexBuffer), 2):#两字符合并成一个16进制字节  
                 u8Image_ByteArray.append(int(strHexBuffer[indexFlash:indexFlash+2],16))
                 
-            Addr = u32HexAddress + strPage*0x10000 * 2    #某数据帧的初始地址
+            Addr = u32HexAddress + strPage*0x10000    #某数据帧的初始地址
             if((Addr >= AddrStart) and (Addr < AddrEnd)): 
                 # print("Address:"+"{:08X}".format((u32HexAddress + strPage*0x10000)))
                 # print("Data:"+ strHexBuffer)  
@@ -235,14 +242,14 @@ if __name__ == "__main__":
     Sec_app_InputFile = "./Master_CH508.X.production.hex"
     Sec_app_Records = []
 
-    Sec_Header_Page = 0x0005 #Byte Page
-    Sec_Header_StartAddress = 0x2000 #Byte Address
-    Sec_Header_Sizes = 1984 #Byte size
-    Sec_Header_u32FlashSize = 1984  #Byte size
-    Sec_Header_InputFile = "./Header_Signature.hex"
-    Sec_Header_Records = []
+    # Sec_Header_Page = 0x0005 #Byte Page
+    # Sec_Header_StartAddress = 0x2000 #Byte Address
+    # Sec_Header_Sizes = 1984 #Byte size
+    # Sec_Header_u32FlashSize = 1984  #Byte size
+    # Sec_Header_InputFile = "./Header_Signature.hex"
+    # Sec_Header_Records = []
 
-    Sec_app_Header_u32FlashSize = 260*1024 #Byte size #Sec_app_u32FlashSize + Sec_Header_u32FlashSize + Reserved
+    # Sec_app_Header_u32FlashSize = 260*1024 #Byte size #Sec_app_u32FlashSize + Sec_Header_u32FlashSize + Reserved
 
     Sec_app_Checksum_Offset = 4
     Sec_app_Checksum_Sizes = Sec_app_Sizes*2 - Sec_app_Checksum_Offset
@@ -251,15 +258,15 @@ if __name__ == "__main__":
 
     u16Sec_app_RAW_CRC16 = 0
     u32Sec_app_CHECKSUM = 0
+    u32Sec_app_Show_CHECKSUM = 0
 
     if((True == os.path.exists(Sec_app_InputFile))
-        & (True == os.path.exists(Sec_Header_InputFile))): # True/False
-        # u8SecRawImageArray = MC56F8_GetBinList(Sec_raw_u32FlashSize,Sec_raw_StartAddress*2,Sec_raw_Sizes*2,Sec_app_Page,Sec_app_InputFile,Sec_app_Records)
-        u8SecAppImageArray = MC56F8_GetBinList(Sec_app_u32FlashSize,Sec_app_StartAddress*2,Sec_app_Sizes*2,Sec_app_Page,Sec_app_InputFile,Sec_app_Records)
-        u8SecHeaderArray = MC56F8_GetBinList(Sec_Header_u32FlashSize,Sec_Header_StartAddress,Sec_Header_Sizes,Sec_Header_Page,Sec_Header_InputFile,Sec_Header_Records)
+        # & (True == os.path.exists(Sec_Header_InputFile))    \
+        ): # True/False
         
-        # print("u8SecRawImageArray:")
-        # print(pretty_print_hex(u8SecRawImageArray,16,"    "))
+        u8SecAppImageArray = Sec_MC56F8_GetBinList(Sec_app_u32FlashSize,Sec_app_StartAddress*2,Sec_app_Sizes*2,Sec_app_Page,Sec_app_InputFile,Sec_app_Records)
+        # u8SecHeaderArray = Sec_MC56F8_GetBinList(Sec_Header_u32FlashSize,Sec_Header_StartAddress,Sec_Header_Sizes,Sec_Header_Page,Sec_Header_InputFile,Sec_Header_Records)
+        
         # print("u8SecAppImageArray:")
         # print(pretty_print_hex(u8SecAppImageArray,16,"    "))
         # print("u8SecHeaderArray:")
@@ -268,13 +275,21 @@ if __name__ == "__main__":
         # Sec APP Checksum
         for i in range(0, Sec_app_Checksum_Sizes, 1):
             u16Sec_app_RAW_CRC16 = (u16Sec_app_RAW_CRC16 >> 8) ^ u16CRC16Table[((u16Sec_app_RAW_CRC16 & 0xFF) ^ u8SecAppImageArray[i])]
-        u32Sec_app_CHECKSUM = (u16Sec_app_RAW_CRC16 & 0xFFFF)<<16
-        print("SEC CPU CRC16 CheckSum:" + "{:08X}".format(u32Sec_app_CHECKSUM))
-
-        u8SecAppImageArray[Sec_app_Sizes*2 - 4] = (u32Sec_app_CHECKSUM >> 16 & 0xFF)      # CRC Lower byte
-        u8SecAppImageArray[Sec_app_Sizes*2 - 3] = (u32Sec_app_CHECKSUM >> 24 & 0xFF)      # CRC Higher byte
+        
+        u32Sec_app_CHECKSUM = (u16Sec_app_RAW_CRC16 & 0xFFFF)
+        print("SEC CPU Real CheckSum:" + "{:08X}".format(u32Sec_app_CHECKSUM))
+        
+        u8SecAppImageArray[Sec_app_Sizes*2 - 4] = (u32Sec_app_CHECKSUM & 0xFF)      # CRC Lower byte
+        u8SecAppImageArray[Sec_app_Sizes*2 - 3] = (u32Sec_app_CHECKSUM >> 8 & 0xFF)      # CRC Higher byte
         u8SecAppImageArray[Sec_app_Sizes*2 - 2] = 0x00                                    # 
         u8SecAppImageArray[Sec_app_Sizes*2 - 1] = 0x00                                    # 
+
+        u32Sec_app_Show_CHECKSUM = (u8SecAppImageArray[Sec_app_Sizes*2 - 4] << 24) \
+                                    | (u8SecAppImageArray[Sec_app_Sizes*2 - 3] << 16) \
+                                    | (u8SecAppImageArray[Sec_app_Sizes*2 - 2] << 8) \
+                                    | (u8SecAppImageArray[Sec_app_Sizes*2 - 1] )
+        print("SEC CPU Show CheckSum:" + "{:08X}".format(u32Sec_app_Show_CHECKSUM))
+
 
         # print("L:" + "{:02X}".format(u8SecAppImageArray[Sec_app_Sizes*2 - 4]))
         # print("H:" + "{:02X}".format(u8SecAppImageArray[Sec_app_Sizes*2 - 3]))
@@ -289,7 +304,7 @@ if __name__ == "__main__":
         # print("u8SecAppImageArrayWithoutCali:")
         # print(pretty_print_hex(u8SecAppImageArrayWithoutCali,16,"    "))
 
-    Combine_output_file = "./Flex_M1279207-902_P4020_V00000000(App)_" + "{:08X}".format(u32Sec_app_CHECKSUM) + ".hex"
+    Combine_output_file = "./Flex_M1279207-902_P4020_V00000000(App)_" + "{:08X}".format(u32Sec_app_Show_CHECKSUM) + ".hex"
     #清除原输出文件
     Save_File = open(Combine_output_file, 'w')
     Save_File.close()
